@@ -19,15 +19,17 @@
 /* Select hand configuration */
 
 #define QUICK_TAP_TERM 0
-#define TAPPING_TERM 180
+#define TAPPING_TERM 160
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
+#define TAPPING_TOGGLE 3
 
 #define ENABLE_COMPILE_KEYCODE
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 /* Led underglow - mainly for layer lightning */
  #define WS2812_DI_PIN D3
+ #define BACKLIGHT_PIN D3
  #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
  #define RGBLIGHT_LAYERS
  #define RGBLIGHT_LAYER_BLINK
