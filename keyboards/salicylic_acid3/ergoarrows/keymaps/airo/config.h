@@ -23,20 +23,21 @@
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
 #define TAPPING_TOGGLE 3
+#define ONESHOT_TIMEOUT 500
 
 #define ENABLE_COMPILE_KEYCODE
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 /* Led underglow - mainly for layer lightning */
- #define WS2812_DI_PIN D3
+ //#define WS2812_DI_PIN D3
  #define BACKLIGHT_PIN D3
  #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
  #define RGBLIGHT_LAYERS
  #define RGBLIGHT_LAYER_BLINK
  #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
  #define RGBLIGHT_MAX_LAYERS 8
-  // #define RGBLED_NUM 86
-  // #define RGBLED_SPLIT { 43, 43 }
+  #define RGBLED_NUM 86
+  #define RGBLED_SPLIT { 43, 43 }
  // #define RGBLIGHT_SAT_STEP 25
  //  #define RGBLIGHT_HUE_STEP 12
  //  #define RGBLIGHT_VAL_STEP 12
@@ -49,10 +50,10 @@
  #define RGBLIGHT_DEFAULT_ON 	true
 
  /* WS2812 driver configuration*/
-  #define WS2812_TIMING 1250
-  #define WS2812_T1H 900
-  #define WS2812_T0H 350
-  #define WS2812_TRST_US 280
+  //#define WS2812_TIMING 1250
+  //#define WS2812_T1H 900
+  //#define WS2812_T0H 350
+  //#define WS2812_TRST_US 280
   // #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_GRB
  /* END WS2812 driver configuration*/
 /* END Led underglow */
