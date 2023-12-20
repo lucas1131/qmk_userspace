@@ -287,7 +287,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case CM_MAKE:
             if (record->event.pressed) {
-                SEND_STRING("qmk compile -j 4 -kb " QMK_KEYBOARD " -km " QMK_KEYMAP);
+                SEND_STRING("qmk compile -j 12 -kb " QMK_KEYBOARD " -km " QMK_KEYMAP);
             }
             return false;
     }
