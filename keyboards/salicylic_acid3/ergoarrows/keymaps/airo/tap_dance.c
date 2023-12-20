@@ -1,6 +1,11 @@
 /* Tap dance defines */
+#define TAP_DANCE_INTERRUPT_SEND_HOLD true
+#define TAP_DANCE_INTERRUPT_SEND_TAP false
+
 enum tap_dance_definitions {
     TAP_DANCE_TSCLN_HCLN,
+    TAP_DANCE_LPRN_LSFT,
+    TAP_DANCE_RPRN_RSFT,
     TAP_DANCE_LSQB_LCBR,
     TAP_DANCE_RSQB_RCBR,
     TAP_DANCE_C_CEDL,
@@ -9,11 +14,6 @@ enum tap_dance_definitions {
     TAP_DANCE_I_ACC,
     TAP_DANCE_O_ACC,
     TAP_DANCE_U_ACC,
-
-    // not working seems to be incompatible
-    TAP_DANCE_BACKSPACE_LCTRL_DEL,
-    TAP_DANCE_LPAREN_LSHIFT_CWORD,
-    TAP_DANCE_RPAREN_RSHIFT_CWORD,
 };
 
 typedef enum {
@@ -43,19 +43,20 @@ typedef struct {
     uint16_t hold;
     uint16_t double_tap;
     uint16_t double_hold;
+    bool interrupt_send_hold;
     uint16_t key;
 } tap_dance_quad_action_data_t;
 
 // Function definitions
-td_state_t cur_dance(tap_dance_state_t *state);
+td_state_t cur_dance(tap_dance_state_t *state, bool interrupt_send_hold);
 void tap_dance_quad_action_finished(tap_dance_state_t *state, void *user_data);
 void tap_dance_quad_action_reset(tap_dance_state_t *state, void *user_data);
 
 // Action macros
-#define TAP_DANCE_QUAD_TAP_ACTION(tap, hold, double_tap, double_hold) \
+#define TAP_DANCE_QUAD_TAP_ACTION(tap, hold, double_tap, double_hold, interrupt_send_hold) \
     { \
         .fn = {NULL, tap_dance_quad_action_finished, tap_dance_quad_action_reset}, \
-        .user_data = (void *)&((tap_dance_quad_action_data_t){tap, hold, double_tap, double_hold, 0}), \
+        .user_data = (void *)&((tap_dance_quad_action_data_t){tap, hold, double_tap, double_hold, interrupt_send_hold, 0}), \
     }
  
 #define TAP_DANCE_DOUBLE_TAP_ACCENT(tap, dtap_accent) \
@@ -64,15 +65,20 @@ void tap_dance_quad_action_reset(tap_dance_state_t *state, void *user_data);
         .user_data = (void *)&((tap_dance_double_tap_accent_data_t){tap, dtap_accent}), \
     }
 
-#define TAP_DANCE_TAP_HOLD(tap, hold) TAP_DANCE_QUAD_TAP_ACTION(tap, hold, 0, 0)
-#define TAP_DANCE_TAP_DOUBLE_TAP(tap, double_tap) TAP_DANCE_QUAD_TAP_ACTION(tap, 0, double_tap, 0)
+#define TAP_DANCE_TAP_HOLD(tap, hold, interrupt_send_hold) TAP_DANCE_QUAD_TAP_ACTION(tap, hold, 0, 0, interrupt_send_hold)
+#define TAP_DANCE_TAP_DOUBLE_TAP(tap, double_tap) TAP_DANCE_QUAD_TAP_ACTION(tap, 0, double_tap, 0, TAP_DANCE_INTERRUPT_SEND_TAP)
 
 // Quad action dance
-td_state_t cur_dance(tap_dance_state_t *state) {
+td_state_t cur_dance(tap_dance_state_t *state, bool interrupt_send_hold) {
     if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_SINGLE_HOLD;
+        if (state->pressed){
+            // Emulates permissive hold when interrupt_send_hold is true, else 
+            // we treat as normal typing instead of dance and just tap the key
+            if(!state->interrupted) return TD_SINGLE_HOLD;
+            else if(interrupt_send_hold) return TD_SINGLE_HOLD;
+            else return TD_SINGLE_TAP;
+        }
+        else return TD_SINGLE_TAP;
     } else if (state->count == 2) {
         // TD_DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
         // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
@@ -99,25 +105,25 @@ static td_tap_t tap_state = {
 // NOTE: state->pressed means key is being held, has nothing to do with a tap
 void tap_dance_quad_action_finished(tap_dance_state_t *state, void *user_data) {
     tap_dance_quad_action_data_t *action = (tap_dance_quad_action_data_t *) user_data;
-    tap_state.state = cur_dance(state);
+    tap_state.state = cur_dance(state, action->interrupt_send_hold);
     switch (tap_state.state) {
         case TD_SINGLE_TAP:
-            // SEND_STRING("TD_SINGLE_TAP") ;
+            // SEND_STRING("TD_SINGLE_TAP\n");
             register_code16(action->tap); 
             action->key = action->tap;
             break;
         case TD_SINGLE_HOLD:
-            // SEND_STRING("TD_SINGLE_HOLD") ;
+            // SEND_STRING("TD_SINGLE_HOLD\n");
             register_code16(action->hold); 
             action->key = action->hold;
             break;
         case TD_DOUBLE_TAP:
-            // SEND_STRING("TD_DOUBLE_TAP") ;
+            // SEND_STRING("TD_DOUBLE_TAP\n");
             register_code16(action->double_tap); 
             action->key = action->double_tap;
             break;
         case TD_DOUBLE_HOLD:
-            // SEND_STRING("TD_DOUBLE_HOLD") ;
+            // SEND_STRING("TD_DOUBLE_HOLD\n");
             register_code16(action->double_hold); 
             action->key = action->double_hold;
             break;
@@ -125,7 +131,7 @@ void tap_dance_quad_action_finished(tap_dance_state_t *state, void *user_data) {
         // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
         // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
         case TD_DOUBLE_SINGLE_TAP:
-            // SEND_STRING("TD_DOUBLE_SINGLE_TAP") ;
+            // SEND_STRING("TD_DOUBLE_SINGLE_TAP\n");
             tap_code16(action->tap); 
             register_code16(action->tap); 
             action->key = action->tap;
@@ -180,7 +186,9 @@ void tap_dance_double_tap_accent_finished(tap_dance_state_t *state, void *user_d
         register_code16(tap_accent->tap);
         reset_tap_dance(state);
     } else if(state->count == 2) {
-        if(!state->interrupted){
+        if(state->interrupted){ // actually typing double letter cc or something
+            tap_code16(tap_accent->tap);
+        } else {
             tap_code16(tap_accent->dtap_accent);
         }
         register_code16(tap_accent->tap);
@@ -189,20 +197,12 @@ void tap_dance_double_tap_accent_finished(tap_dance_state_t *state, void *user_d
 }
 /* Tap dance */
 
-/* tesing area
+/* testing area
+  
+  fds
 
 
-asd
-
-aaããçççãaaaaaaaaaa
-
-
-
-
-
-
-
-
+fdsafdsafdasfdsafdsfdsafsdfdsa
 
 
 */

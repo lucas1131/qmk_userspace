@@ -17,43 +17,33 @@
 #pragma once
 
 /* Select hand configuration */
-
 #define QUICK_TAP_TERM 0
 #define TAPPING_TERM 160
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
 #define TAPPING_TOGGLE 3
 #define ONESHOT_TIMEOUT 500
+#define COMBO_ONLY_FROM_LAYER 0
 
 #define ENABLE_COMPILE_KEYCODE
-#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+// #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD // This isn't working very well with modtap on shifts
+
+/* Optimization flags */
+#define LAYER_STATE_8BIT
+// #define EXTRA_SHORT_COMBOS // 6 keys combos -- no relevant size reduction
+#undef LOCKING_SUPPORT_ENABLE
+#undef LOCKING_RESYNC_ENABLE
 
 /* Led underglow - mainly for layer lightning */
- //#define WS2812_DI_PIN D3
- #define BACKLIGHT_PIN D3
  #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
  #define RGBLIGHT_LAYERS
  #define RGBLIGHT_LAYER_BLINK
  #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
  #define RGBLIGHT_MAX_LAYERS 8
-  #define RGBLED_NUM 86
-  #define RGBLED_SPLIT { 43, 43 }
- // #define RGBLIGHT_SAT_STEP 25
- //  #define RGBLIGHT_HUE_STEP 12
- //  #define RGBLIGHT_VAL_STEP 12
-
 
  #define RGBLIGHT_DEFAULT_HUE 	0 //(red)
  #define RGBLIGHT_DEFAULT_SAT 	UINT8_MAX //(255)
  #define RGBLIGHT_DEFAULT_VAL 	RGBLIGHT_LIMIT_VAL
  #define RGBLIGHT_DEFAULT_SPD 	0
  #define RGBLIGHT_DEFAULT_ON 	true
-
- /* WS2812 driver configuration*/
-  //#define WS2812_TIMING 1250
-  //#define WS2812_T1H 900
-  //#define WS2812_T0H 350
-  //#define WS2812_TRST_US 280
-  // #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_GRB
- /* END WS2812 driver configuration*/
 /* END Led underglow */

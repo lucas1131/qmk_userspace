@@ -1,31 +1,33 @@
 /*
-Copyright 2021-2023 Salicylic_Acid
+    Copyright 2021-2023 Salicylic_Acid
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 2 of the License, or
+    (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
 #include "keymap_brazilian_abnt2.h"
 #include "keymap_japanese.h"
+#include "action_layer.h"
 
 // custom 
 enum custom_keycodes {
     CM_MAKE = SAFE_RANGE,
 };
+
 #define NO_TOUCH _______
 #define KC_SPR KC_LGUI  // super renamed
-#define KC_CEDL RALT(KC_COMM)  // super renamed
+#define KC_CEDL RALT(KC_COMM)  // ç renamed
 
 
 // Mod tap defines
@@ -38,18 +40,16 @@ enum custom_keycodes {
 #define SPR_IJKL LT(SL_IJKL, KC_SPR) // super and set arrows layout
 #define SPR_WASD LT(SL_WASD, KC_SPR)
 
-
-// Tap dance defines
 #include "tap_dance.c"
 
+// Tap dance defines
 tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_TSCLN_HCLN] = TAP_DANCE_TAP_HOLD(KC_SCLN, KC_COLN),
-    // [TAP_DANCE_BACKSPACE_LCTRL_DEL] = TAP_DANCE_QUAD_TAP_ACTION(KC_BSPC, KC_LCTL, KC_DEL, 0),
-    // [TAP_DANCE_LPAREN_LSHIFT_CWORD] = TAP_DANCE_QUAD_TAP_ACTION(KC_LPRN, KC_LSFT, CW_TOGG, 0),
-    // [TAP_DANCE_RPAREN_RSHIFT_CWORD] = TAP_DANCE_QUAD_TAP_ACTION(KC_RPRN, KC_RSFT, CW_TOGG, 0),
+    [TAP_DANCE_TSCLN_HCLN] = TAP_DANCE_TAP_HOLD(KC_SCLN, KC_COLN, TAP_DANCE_INTERRUPT_SEND_TAP),
     [TAP_DANCE_C_CEDL] = TAP_DANCE_TAP_DOUBLE_TAP(KC_C, KC_CEDL),
-    [TAP_DANCE_LSQB_LCBR] = TAP_DANCE_TAP_HOLD(KC_LBRC, KC_LCBR),
-    [TAP_DANCE_RSQB_RCBR] = TAP_DANCE_TAP_HOLD(KC_RBRC, KC_RCBR),
+    [TAP_DANCE_LPRN_LSFT] = TAP_DANCE_QUAD_TAP_ACTION(KC_LPRN, KC_LSFT, KC_A, 0, TAP_DANCE_INTERRUPT_SEND_HOLD),
+    [TAP_DANCE_RPRN_RSFT] = TAP_DANCE_QUAD_TAP_ACTION(KC_RPRN, KC_RSFT, CW_TOGG, 0, TAP_DANCE_INTERRUPT_SEND_HOLD),
+    [TAP_DANCE_LSQB_LCBR] = TAP_DANCE_TAP_HOLD(KC_LBRC, KC_LCBR, TAP_DANCE_INTERRUPT_SEND_TAP),
+    [TAP_DANCE_RSQB_RCBR] = TAP_DANCE_TAP_HOLD(KC_RBRC, KC_RCBR, TAP_DANCE_INTERRUPT_SEND_TAP),
     [TAP_DANCE_C_CEDL] = TAP_DANCE_TAP_DOUBLE_TAP(KC_C, KC_CEDL),
     [TAP_DANCE_A_ACC] = TAP_DANCE_DOUBLE_TAP_ACCENT(KC_A, KC_TILD),
     [TAP_DANCE_E_ACC] = TAP_DANCE_DOUBLE_TAP_ACCENT(KC_E, KC_CIRC),
@@ -59,11 +59,10 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 #define SCLN_CLN TD(TAP_DANCE_TSCLN_HCLN)          // tap ; hold :
+#define LP_LSFT  TD(TAP_DANCE_LPRN_LSFT)           // tap ( hold lshift
+#define RP_RSFT  TD(TAP_DANCE_RPRN_RSFT)           // tap ) hold rshift
 #define LSB_LCB  TD(TAP_DANCE_LSQB_LCBR)           // tap [ hold {
 #define RSB_RCB  TD(TAP_DANCE_RSQB_RCBR)           // tap ] hold }
-// #define BS_LC_DL TD(TAP_DANCE_BACKSPACE_LCTRL_DEL) // tap backspace hold rctrl double tap del
-// #define LP_LS_CW TD(TAP_DANCE_LPAREN_LSHIFT_CWORD) // tap ( hold lshift double tap caps word
-// #define RP_RS_CW TD(TAP_DANCE_RPAREN_RSHIFT_CWORD) // tap ) hold rshift double tap caps word
 #define C_ACC    TD(TAP_DANCE_C_CEDL)              // tap c double tap ç
 #define A_ACC    TD(TAP_DANCE_A_ACC)               // tap a double tap ã
 #define E_ACC    TD(TAP_DANCE_E_ACC)               // tap e double tap ê
@@ -86,6 +85,7 @@ tap_dance_action_t tap_dance_actions[] = {
 
 #define OS_SLCT OSL(_LAYER_SELECTOR) // One shot layer selector
 
+// Layer is set to 8 and realistically there shouldn't be any need for more than this
 enum layer_number {
     _QWERTY = 0,
     _DANCES,
@@ -93,9 +93,10 @@ enum layer_number {
     _ARROWS_IJKL,
     _ARROWS_WASD,
     _GAME,
+    _UNUNSED,
     _LAYER_SELECTOR,
 };
-// 
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(                                                      //acentos
         //,--------------------------------------------------------------|   |--------------------------------------------------------------.
@@ -105,9 +106,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
             CW_TOGG,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,     KC_QUOT,    KC_H,    KC_J,    KC_K,    KC_L,SCLN_CLN,  KC_EQL,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            SC_LSPO,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,     _______, KC_SLSH,    KC_N,    KC_M, KC_COMM,  KC_DOT, SC_RSPC,
+            LP_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,     _______, KC_SLSH,    KC_N,    KC_M, KC_COMM,  KC_DOT, RP_RSFT,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            SL_IJKL, LSB_LCB,   KC_UP, OS_SLCT,LALTBSPC, LCT_SPC, SPR_ENT,      KC_ENT, RCT_SPC,RALTBSPC, KC_PSCR,   KC_UP, RSB_RCB, SL_WASD,
+            SL_IJKL, LSB_LCB,   KC_UP, OS_SLCT,LALTBSPC, LCT_SPC, KC_LGUI,      KC_ENT, RCT_SPC,RALTBSPC, KC_PSCR,   KC_UP, RSB_RCB, SL_WASD,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
                     KC_LEFT, KC_DOWN, KC_RGHT,                                                           KC_LEFT, KC_DOWN, KC_RGHT    
         //'--------------------------------------------------------------|   |--------------------------------------------------------------'
@@ -193,6 +194,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //|--------------------------------------------------------------|   |--------------------------------------------------------------'
     ),
 
+    [_UNUNSED] = LAYOUT(
+        //,--------------------------------------------------------------|   |--------------------------------------------------------------.
+            _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+        //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
+            _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+        //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
+            _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+        //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
+            _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+        //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
+            _______, _______, _______,NO_TOUCH, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+        //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
+                     _______, _______, _______,                                                           _______, _______, _______    
+        //|--------------------------------------------------------------|   |--------------------------------------------------------------'
+    ),
+
     [_LAYER_SELECTOR] = LAYOUT(
         //,--------------------------------------------------------------|   |--------------------------------------------------------------.
              KC_ESC, TL_DFLT,   TL_TD, TL_WORK, TL_GAME, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -243,10 +260,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         // for black magic dance shenanigans
         case C_ACC:
             return 156;
+        case O_ACC:
+            return 170;
         case A_ACC:
         case E_ACC:
         case I_ACC:
-        case O_ACC:
         case U_ACC: 
             return 160;
         default:
@@ -291,4 +309,22 @@ void keyboard_post_init_user() {
     //debug_mouse=true;
 #endif
 }
+
+// Combo needs some names definitions to work, so leave it here
+#include "combos.c"
+
+
+
+/* These are two magic functios (with __attribute__((weak))) used to swap keycodes 
+ for, respectively, baclslash and backspace; and ctrl and GUI. I don't need these so
+ overwrite theses functions with basically do nothing code
+*/
+uint16_t keycode_config(uint16_t keycode) {
+    return keycode;
+}
+
+uint8_t mod_config(uint8_t mod) {
+    return mod;
+}
+
   
