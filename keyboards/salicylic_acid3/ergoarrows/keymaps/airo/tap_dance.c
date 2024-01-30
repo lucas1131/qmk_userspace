@@ -8,12 +8,15 @@ enum tap_dance_definitions {
     TAP_DANCE_RPRN_RSFT,
     TAP_DANCE_LSQB_LCBR,
     TAP_DANCE_RSQB_RCBR,
+    TAP_DANCE_QUOT_DQUO,
     TAP_DANCE_C_CEDL,
     TAP_DANCE_A_ACC,
     TAP_DANCE_E_ACC,
     TAP_DANCE_I_ACC,
     TAP_DANCE_O_ACC,
     TAP_DANCE_U_ACC,
+
+    TAP_DANCE_TT_IJKL,
 };
 
 typedef enum {
@@ -199,10 +202,12 @@ void tap_dance_double_tap_accent_finished(tap_dance_state_t *state, void *user_d
 
 /* testing area
   
-  fds
+
+kjlkjkljkljlk.ljlkj6666..6
 
 
-fdsafdsafdasfdsafdsfdsafsdfdsa
+
+
 
 
 */
