@@ -37,7 +37,7 @@
 
 
 
-/* Led configs */
+// #if defined (RGBLIGHT_ENABLE || RGB_MATRIX_ENABLE)
 	#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
 	#undef RGBLIGHT_HUE_STEP
 	#define RGBLIGHT_HUE_STEP 8
@@ -60,10 +60,15 @@
 	#define RGBLIGHT_SPLIT
 	#define RGBLIGHT_LED_COUNT 86
 
+
+	#define RGB_DISABLE_WHEN_USB_SUSPENDED // it think this the old name of RGB_MATRIX_SLEEP ? unneeded?
+	#define RGB_MATRIX_SLEEP
+
 	// RGB indicators on split keyboards will require state information synced to the slave half (e.g. #define SPLIT_LAYER_STATE_ENABLE). See data sync options for more details.
 	// https://docs.qmk.fm/#/feature_split_keyboard?id=data-sync-options
 	#define SPLIT_TRANSPORT_MIRROR
 	#define SPLIT_LAYER_STATE_ENABLE
 	#define SPLIT_MODS_ENABLE
-/* END Led configs */
+	#define SPLIT_LED_STATE_ENABLE
+// #endif /* RGBLIGHT_ENABLE || RGB_MATRIX_ENABLE */
 
