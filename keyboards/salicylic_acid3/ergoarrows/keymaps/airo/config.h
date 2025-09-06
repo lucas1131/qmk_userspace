@@ -35,34 +35,19 @@
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
 
+#define MASTER_RIGHT
 
 
-// #if defined (RGBLIGHT_ENABLE || RGB_MATRIX_ENABLE)
-	#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
-	#undef RGBLIGHT_HUE_STEP
-	#define RGBLIGHT_HUE_STEP 8
-	#undef RGBLIGHT_SAT_STEP
-	#define RGBLIGHT_SAT_STEP 5
-	#undef RGBLIGHT_VAL_STEP
-	#define RGBLIGHT_VAL_STEP 5
-	#undef RGBLIGHT_LIMIT_VAL
-	#define RGBLIGHT_LIMIT_VAL 100
-	#define RGBLIGHT_DEFAULT_HUE 0
-	#define RGBLIGHT_DEFAULT_SAT 128
-	#define RGBLIGHT_DEFAULT_VAL 75
-	#define RGBLIGHT_DEFAULT_SPD 0
+#if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
 
-	#define RGBLIGHT_DEFAULT_ON false
-
-	#define RGBLIGHT_DISABLE_KEYCODES
-	#define RGBLIGHT_SLEEP
-
-	#define RGBLIGHT_SPLIT
-	#define RGBLIGHT_LED_COUNT 86
-
-
-	#define RGB_DISABLE_WHEN_USB_SUSPENDED // it think this the old name of RGB_MATRIX_SLEEP ? unneeded?
 	#define RGB_MATRIX_SLEEP
+
+	#define RGB_DI_PIN D3
+	#define RGB_MATRIX_LED_COUNT 76
+	#define RGB_MATRIX_SPLIT { 38, 38 }
+
+	#define RGB_DISABLE_WHEN_USB_SUSPENDED true
+	#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120
 
 	// RGB indicators on split keyboards will require state information synced to the slave half (e.g. #define SPLIT_LAYER_STATE_ENABLE). See data sync options for more details.
 	// https://docs.qmk.fm/#/feature_split_keyboard?id=data-sync-options
@@ -70,5 +55,5 @@
 	#define SPLIT_LAYER_STATE_ENABLE
 	#define SPLIT_MODS_ENABLE
 	#define SPLIT_LED_STATE_ENABLE
-// #endif /* RGBLIGHT_ENABLE || RGB_MATRIX_ENABLE */
+#endif /* RGBLIGHT_ENABLE || RGB_MATRIX_ENABLE */
 

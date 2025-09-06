@@ -19,7 +19,7 @@
 #include "keymap_brazilian_abnt2.h"
 #include "keymap_japanese.h"
 #include "action_layer.h"
-#include "led_indicators.h"
+#include "custom_led.h"
 #include "definitions.h"
 
 #define NO_TOUCH _______
@@ -145,11 +145,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
             _______, _______, _______,    KC_E, _______, _______, _______,     _______, _______, _______, _______,    KC_O, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            KC_LCTL,    KC_A, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+            KC_LALT,    KC_A, _______, _______, _______, _______, _______,     KC_QUOT, _______, _______, _______, _______, KC_SCLN, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
             KC_LSFT, _______, _______,    KC_C, _______, _______,    KC_M,     _______, _______, _______, _______, _______, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            KC_LALT, _______, _______,NO_TOUCH, _______, KC_SPC,   KC_ENT,      KC_ENT, _______, _______, _______, _______, _______,TG(_GAME),
+            KC_LCTL, KC_LBRC, _______,NO_TOUCH, _______, KC_SPC,   KC_ENT,      KC_ENT, _______, KC_BSPC, _______, _______, KC_RBRC, KC_RCTL,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
                      _______, _______, _______,                                                           _______, _______, _______    
         //|--------------------------------------------------------------|   |--------------------------------------------------------------'
@@ -157,15 +157,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUMPAD] = LAYOUT(
         //,--------------------------------------------------------------|   |--------------------------------------------------------------.
-             KC_GRV,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,       KC_F7,   KC_F8,    KC_7,    KC_8,    KC_9,  KC_F12, KC_PSCR,
+             KC_GRV,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,       KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12, KC_PSCR,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            _______, KC_HOME,   KC_UP, KC_PGUP, _______, _______, _______,     TL_NPAD, _______,    KC_4,    KC_5,    KC_6, _______, _______,
+            _______, KC_HOME,   KC_UP, KC_PGUP, _______, _______, _______,     TL_NPAD, _______,    KC_7,    KC_8,    KC_9, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______,     _______, _______,    KC_1,    KC_2,    KC_3, _______, _______,
+            _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______,     _______,    KC_0,    KC_4,    KC_5,    KC_6, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            _______,  KC_END, KC_DOWN, KC_PGDN, _______, _______, _______,     _______, _______,    KC_0,    KC_0, _______, _______, _______,
+            _______,  KC_END, KC_DOWN, KC_PGDN, _______, _______, _______,     _______,    KC_0,    KC_1,    KC_2,    KC_3, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
-            _______, _______, _______,NO_TOUCH, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
+            _______, _______, _______,NO_TOUCH, _______, _______, _______,     _______, _______, _______,    KC_0, _______, _______, _______,
         //|--------+--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------+--------|
                      _______, _______, _______,                                                           _______, _______, _______
         //|--------------------------------------------------------------|   |--------------------------------------------------------------'
@@ -272,159 +272,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    // RGB_MATRIX_INDICATOR_SET_COLOR(0, 255, 0, 0);
-    return false;
-}
-
-void test_led_matrix(void){
-    int val = 0;
-    setrgb(255, 255, 255, (rgb_led_t *)&led[0]); val += 8;
-    setrgb(8, 4, 2, (rgb_led_t *)&led[ 1]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 2]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 3]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 4]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 5]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 6]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 7]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 8]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[ 9]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[10]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[11]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[12]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[13]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[14]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[15]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[16]); val += 8;
-
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[17]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[18]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[19]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[20]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[21]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[22]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[23]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[24]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[25]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[26]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[27]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[28]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[29]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[30]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[31]); val += 8;
-    setrgb(val, val/4, val/8, (rgb_led_t *)&led[32]); val += 8;
-
-    val = 0;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[33]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[34]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[35]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[36]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[37]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[38]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[39]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[40]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[41]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[42]); val += 8;
-    setrgb(255, 255, 255, (rgb_led_t *)&led[43]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[44]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[45]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[46]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[47]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[48]); val += 8;
-
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[49]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[50]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[51]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[52]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[53]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[54]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[55]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[56]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[57]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[58]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[59]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[60]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[61]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[62]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[63]); val += 8;
-    setrgb(val/4, val, val/8, (rgb_led_t *)&led[64]); val += 8;
-
-    val = 0;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[65]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[66]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[67]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[68]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[69]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[70]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[71]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[72]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[73]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[74]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[75]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[76]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[77]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[78]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[79]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[80]); val += 8;
-
-    val = 0;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[81]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[82]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[83]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[84]); val += 8;
-    setrgb(val/16, val/8, val/4, (rgb_led_t *)&led[85]); val += 8;
-
-    rgblight_set();
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-
-    // process_led_layer_indicators(state);
-    // test_led_matrix();
-
-    switch (get_highest_layer(state)) {
-        case _QWERTY:
-            rgblight_sethsv(DEFAULT_COLOR);
-        break;
-
-        case _DANCES:
-            rgblight_sethsv(MY_HSV_GREEN);
-        break;
-
-        case _WORK:
-            rgblight_sethsv(MY_HSV_AZURE);
-        break;
-
-        case _ARROWS_IJKL:
-            rgblight_sethsv(MY_HSV_CYAN);
-        break;
-
-        case _NUMPAD:
-            rgblight_sethsv(MY_HSV_GOLD);
-        break;
-
-        case _GAME:
-            rgblight_sethsv(MY_HSV_MAGENTA);
-        break;
-
-        case _JAPANESE:
-        break;
-
-        case _LAYER_SELECTOR:
-            rgblight_sethsv(DEFAULT_COLOR);
-        break;
-
-        default:
-        break;
-    }
-    return state;
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     case CM_MAKE:
         if (record->event.pressed) {
-            SEND_STRING("qmk compile -j 8 -kb " QMK_KEYBOARD " -km " QMK_KEYMAP " -e CONVERT_TO=promicro_rp2040");
+            SEND_STRING("qmk compile -j 8 -kb " QMK_KEYBOARD " -km " QMK_KEYMAP " -e CONVERT_TO=rp2040_ce");
         }
         return false;
     }
@@ -433,9 +285,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void keyboard_post_init_user() {
-
     init_leds();
-    // test_led_matrix();
 
 #ifdef CONSOLE_ENABLE
     // Customise these values to desired behaviour

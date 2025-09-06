@@ -1,6 +1,6 @@
 
 # TODO organize combos and tap dances in .h/.c properly and include them here
-SRC += led_indicators.c
+SRC += custom_led.c
 
 # Optimization options for smaller builds
 LTO_ENABLE = yes
@@ -26,7 +26,9 @@ SEND_STRING_ENABLE = yes
 
 
 # LED lightning
-RGBLIGHT_ENABLE = yes
+RGBLIGHT_ENABLE = no
+RGB_MATRIX_ENABLE = yes
+RGB_MATRIX_DRIVER = ws2812
 
 # Removed features to save space
 EXTRAKEY_ENABLE = no
